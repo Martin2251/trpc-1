@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { withTRPC } from '@trpc/next'
 import { httpBatchLink, loggerLink } from '@trpc/client'
+import SuperJSON from 'superjson'
 
 
  function App({ Component, pageProps }: AppProps) {
@@ -18,13 +19,30 @@ export default withTRPC({
       loggerLink(),
       httpBatchLink({
         maxBatchSize: 10,
-        url
-      })
+        url,
+      }),
     ]
 
     return{
-      queryClientConfig
-      links
+      queryClientConfig:{
+        defaultOptions:{
+          queries:{
+            staleTime:60
+          },
+        },
+      },
+      headers(){
+        if(ctx?.req){
+          return {
+            ...ctx.req.headers,
+            'x-ssr':'1'
+          }
+        }
+        return{}
+      },
+      links,
+      transformer: SuperJSON
     }
-  }
+  },
+  ssr:false
 })
