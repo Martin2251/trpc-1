@@ -5,7 +5,7 @@ import { httpBatchLink, loggerLink } from '@trpc/client'
 import SuperJSON from 'superjson'
 
 
- function App({ Component, pageProps }: AppProps) {
+ function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 
@@ -45,4 +45,4 @@ export default withTRPC({
     }
   },
   ssr:false
-})
+})(MyApp)
